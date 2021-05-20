@@ -30,6 +30,8 @@ import config
 import threading
 from App import controller
 from DISClib.ADT import stack
+import tracemalloc
+import time
 assert config
 
 """
@@ -83,8 +85,15 @@ def optionThree(cont):
 
 
 def optionFour(cont, initialStation):
+    dela_time = -1.0
+    start_time = getTime()
+
     controller.minimumCostPaths(cont, initialStation)
 
+    stop_time = getTime()
+
+    delta_time = stop_time - start_time
+    print("Tiempo [ms]: "+f"{delta_time:.3f}")
 
 def optionFive(cont, destStation):
     haspath = controller.hasPath(cont, destStation)
@@ -94,6 +103,9 @@ def optionFive(cont, destStation):
 
 
 def optionSix(cont, destStation):
+    dela_time = -1.0
+    start_time = getTime()
+
     path = controller.minimumCostPath(cont, destStation)
     if path is not None:
         pathlen = stack.size(path)
@@ -101,8 +113,14 @@ def optionSix(cont, destStation):
         while (not stack.isEmpty(path)):
             stop = stack.pop(path)
             print(stop)
+        stop_time = getTime()
+
+        delta_time = stop_time - start_time
+        print("Tiempo [ms]: "+f"{delta_time:.3f}")
+
     else:
         print('No hay camino')
+    
 
 
 def optionSeven(cont):
@@ -158,3 +176,9 @@ if __name__ == "__main__":
     sys.setrecursionlimit(2 ** 20)
     thread = threading.Thread(target=thread_cycle)
     thread.start()
+
+def getTime():
+    """
+    devuelve el instante tiempo de procesamiento en milisegundos
+    """
+    return float(time.perf_counter()*1000)
